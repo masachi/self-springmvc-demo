@@ -1,13 +1,19 @@
 package com.masachi.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Created by masachi on 2017/7/13.
  */
+@Entity
 public class User {
     private int id;
     private String username;
     private String password;
 
+    @Id
     public int getId() {
         return id;
     }

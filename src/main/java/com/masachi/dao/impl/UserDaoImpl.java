@@ -3,8 +3,12 @@ package com.masachi.dao.impl;
 import com.masachi.dao.UserDao;
 import com.masachi.model.ResponseCode;
 import com.masachi.model.User;
+import com.masachi.model.UserEntity;
 import com.masachi.service.LoginService;
 import com.masachi.service.impl.LoginServiceImpl;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -16,59 +20,36 @@ import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
+import javax.imageio.spi.ServiceRegistry;
+
 /**
  * Created by masachi on 2017/7/13.
  */
 @Repository
 public class UserDaoImpl implements UserDao{
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private SessionFactory sessionFactory;
 
-    public ResponseCode findUserByName(String name, final String password){
-        final ResponseCode code = new ResponseCode();
-        final LoginServiceImpl loginService = new LoginServiceImpl();
+    public ResponseCode findUserByName(String name, String password){
+//        System.out.println("session:" + sessionFactory.getCurrentSession());
+        ResponseCode code = new ResponseCode();
+        LoginServiceImpl loginService = new LoginServiceImpl();
 
-//        try {
-//            Statement selectUser = DBConn.connection.createStatement();
-//
-//            String sql = "select * from user where username = " + name;
-//
-//            ResultSet resultSet = selectUser.executeQuery(sql);
-//            if (resultSet.next()) {
-//                if (resultSet.getString("password").equals(loginService.string2MD5(password))) {
-//                    code.setCode(200);
-//                    code.setMessage("");
-//                } else {
-//                    code.setCode(500);
-//                    code.setMessage("Password Incorrect");
-//                }
-//            } else {
-//                code.setCode(500);
-//                code.setMessage("No Such User");
-//            }
-//        }
-//        catch (Exception e){
-//            code.setCode(500);
-//            code.setMessage("Server Error");
-//        }
-        String sql = "select * from user where username = " + name;
-        jdbcTemplate.query(sql, new Object[]{name, password}, new RowCallbackHandler() {
-            @Override
-            public void processRow(ResultSet resultSet) throws SQLException {
-                if (resultSet.next()) {
-                    if (resultSet.getString("password").equals(loginService.string2MD5(password))) {
-                        code.setCode(200);
-                        code.setMessage("");
-                    } else {
-                        code.setCode(500);
-                        code.setMessage("Password Incorrect");
-                    }
-                } else {
-                    code.setCode(500);
-                    code.setMessage("No Such User");
-                }
-            }
-        });
+        if(loginService.string2MD5(password).equals(sessionFactory.getCurrentSession().get(UserEntity.class, name).getPassword())){
+            code.setCode(200);
+            code.setMessage("");
+        }
+        else{
+            code.setCode(500);
+            code.setMessage("Password Incorrect");
+        }
+
         return code;
     }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
 }

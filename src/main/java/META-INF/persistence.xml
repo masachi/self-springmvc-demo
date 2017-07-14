@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="defaultPersistenceUnit">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.masachi.model.CourseEntity</class>
+        <class>com.masachi.model.CourseInfoEntity</class>
+        <class>com.masachi.model.DeviceEntity</class>
+        <class>com.masachi.model.ExamEntity</class>
+        <class>com.masachi.model.NotificationEntity</class>
+        <class>com.masachi.model.ProfileEntity</class>
+        <class>com.masachi.model.ScoreEntity</class>
+        <class>com.masachi.model.TimeoffEntity</class>
+        <class>com.masachi.model.UserEntity</class>
+        <properties>
+            <property name="hibernate.connection.url" value="jdbc:mysql://182.254.152.66:3306/graduate?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true&amp;connectTimeout=0"/>
+            <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+            <property name="hibernate.connection.username" value=""/>
+            <property name="hibernate.connection.password" value=""/>
+            <property name="hibernate.archive.autodetection" value="class"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>
